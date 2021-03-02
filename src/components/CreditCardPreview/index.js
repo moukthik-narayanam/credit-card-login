@@ -145,12 +145,3 @@ export default function CreditCardPreview(props) {
         </Paper>
     )
 }
-
-CreditCardPreview.defaultProps = {
-    cardDetails: {
-        cardNumber: "###################",
-        cardHolderName: "Name",
-        expirationMonth: "MM",
-        expirationYear: "YY"
-    }
-}
