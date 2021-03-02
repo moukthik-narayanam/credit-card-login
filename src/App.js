@@ -1,24 +1,45 @@
-import logo from './logo.svg';
+import { useState, useCallback } from 'react';
+import CreditcardForm from './components/CreditcardForm';
+import CreditCardPreview from './components/CreditCardPreview';
+import Payment from 'payment';
+import { formatCreditCardNumber, formatCVC } from './components/CreditCardPreview/cardUtils';
 import './App.css';
 
+const defaultCardDetails = {
+  cardNumber: "################",
+  carHolderName: "",
+  expirationMonth: "",
+  expirationYear: "",
+  cvv: "",
+  focusedElement: "",
+  cardType:"visa"
+}
 function App() {
+
+  const [cardDetails, setcardDetails] = useState(defaultCardDetails);
+
+  const handleChange = useCallback((e) => {
+    e.stopPropagation();
+    const id = e.target.name;
+    let value = e.target.value;
+    if (id === "cvv") {
+      value = formatCVC(value)
+    }
+    setcardDetails({
+      ...cardDetails,
+      [id]: value,
+      focusedElement: id,
+      cardType: Payment.fns.cardType(cardDetails.cardNumber) || "visa"
+    });
+  }, [cardDetails])
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <CreditCardPreview cardDetails={cardDetails} />
+      <CreditcardForm cardDetails={cardDetails} handleChange={handleChange} />
+    </>
   );
 }
 
